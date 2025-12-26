@@ -39,18 +39,19 @@ func fieldWidthMaskArg(ls *lua.LState, arg int) (uint32, uint32) {
 
 func Loader(ls *lua.LState) int {
 	m := ls.SetFuncs(ls.NewTable(), map[string]lua.LGFunction{
-		"arshift": Bit32arshift,
-		"band":    Bit32band,
-		"bnot":    Bit32bnot,
-		"bor":     Bit32bor,
-		"btest":   Bit32btest,
-		"bxor":    Bit32bxor,
-		"extract": Bit32extract,
-		"replace": Bit32replace,
-		"lrotate": Bit32lrotate,
-		"lshift":  Bit32lshift,
-		"rrotate": Bit32rrotate,
-		"rshift":  Bit32rshift,
+		"arshift":  Bit32arshift,
+		"band":     Bit32band,
+		"bnot":     Bit32bnot,
+		"bor":      Bit32bor,
+		"btest":    Bit32btest,
+		"bxor":     Bit32bxor,
+		"byteswap": Bit32byteswap,
+		"extract":  Bit32extract,
+		"replace":  Bit32replace,
+		"lrotate":  Bit32lrotate,
+		"lshift":   Bit32lshift,
+		"rrotate":  Bit32rrotate,
+		"rshift":   Bit32rshift,
 	})
 	ls.Push(m)
 	return 1
@@ -92,6 +93,12 @@ func Bit32bxor(ls *lua.LState) int {
 		x ^= uint32(ls.CheckNumber(i))
 	}
 	ls.Push(lua.LNumber(x))
+	return 1
+}
+func Bit32byteswap(ls *lua.LState) int {
+	n := uint32(ls.CheckNumber(1))
+	n = (n << 24) | ((n << 8) & 0xff0000) | ((n >> 8) & 0xff00) | (n >> 24)
+	ls.Push(lua.LNumber(n))
 	return 1
 }
 func Bit32extract(ls *lua.LState) int {
